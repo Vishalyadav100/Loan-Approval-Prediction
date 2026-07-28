@@ -74,26 +74,18 @@ def fill_missing_values(df):
         include=["object"]
     ).columns
 
-    # Numerical Columns
-
+    # Fill Numerical Columns
     for col in numeric_columns:
+        df[col] = df[col].fillna(df[col].median())
 
-        df[col].fillna(
-            df[col].median(),
-            inplace=True
-        )
-
-    # Categorical Columns
-
+    # Fill Categorical Columns
     for col in categorical_columns:
-
-        df[col].fillna(
-            df[col].mode()[0],
-            inplace=True
-        )
+        if not df[col].mode().empty:
+            df[col] = df[col].fillna(df[col].mode()[0])
+        else:
+            df[col] = df[col].fillna("Unknown")
 
     return df
-
 
 # ==========================================================
 # Remove Duplicate Rows
@@ -219,6 +211,14 @@ def preprocess_pipeline(
     processed_df = fill_missing_values(
         processed_df
     )
+
+    
+
+    print("=" * 50)
+    print("Missing values after fill_missing_values():")
+    print(processed_df.isnull().sum())
+    print("Total Missing Values:", processed_df.isnull().sum().sum())
+    print("=" * 50)
 
     # Duplicate Rows
     processed_df = remove_duplicates(
