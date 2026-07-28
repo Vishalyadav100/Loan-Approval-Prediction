@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+saved_models/
+
+.venv/
+venv/
+
+.idea/
+.vscode/
+
+.streamlit/secrets.toml
